@@ -141,7 +141,8 @@ public class RobotContainer {
   */
   public Command getAutonomousCommand(String autoSelected) {      
     // return new Level3AutoCommand(m_flapSubsystem, m_armSubsystem, m_gripperSubsystem, m_drivingSubsystem);
-    return new BalanceCommand(m_drivingSubsystem, m_footSubsystem, m_gripperSubsystem,null, true);
+    // return new BalanceCommand(m_drivingSubsystem, m_footSubsystem, m_gripperSubsystem,null, true);
+    return new TimeTurnTestCommand(m_gripperSubsystem, false, m_drivingSubsystem);
     // The selected command will be run in autonomous
     // switch (autoSelected){
     //   case Constants.kBalance:
