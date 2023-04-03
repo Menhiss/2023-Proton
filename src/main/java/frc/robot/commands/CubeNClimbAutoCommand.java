@@ -2,6 +2,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.Timer;
+import java.util.function.DoubleSupplier;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.ADIS16470_IMU.IMUAxis;
@@ -30,17 +31,18 @@ public class CubeNClimbAutoCommand extends CommandBase {
     private final Timer m_delay = new Timer();
     boolean m_timerStarted = false;
     private final double m_stopTime = 2;
+    private final double targetAngle = 180.0;
 
     // Does the power calculation for a given ramp angle
     private final Timer m_timer = new Timer();  
     
-    public CubeNClimbAutoCommand(FlapSubsystem flapSubsystem, ArmSubsystem armSubsystem, GripperSubsystem gripperSubsystem, DrivingSubsystem drivingSubsystem, FootSubsystem footSubsystem) {
+    public CubeNClimbAutoCommand(DrivingSubsystem drivingSubsystem, FlapSubsystem flapSubsystem, ArmSubsystem armSubsystem, GripperSubsystem gripperSubsystem, FootSubsystem footSubsystem) {
         // super(new PIDController(0.03, 0.0, 0.01), drivingSubsystem::getAngle,
         // 180.0, output -> drivingSubsystem.drive(output, -output, 1.0), drivingSubsystem);
+        m_drivingSubsystem = drivingSubsystem;
         m_flapSubsystem = flapSubsystem;
         m_armSubsystem = armSubsystem;
         m_gripperSubsystem = gripperSubsystem;
-        m_drivingSubsystem = drivingSubsystem;
         m_footSubsystem = footSubsystem;
         addRequirements(m_drivingSubsystem);
         addRequirements(m_armSubsystem);
@@ -67,7 +69,7 @@ public class CubeNClimbAutoCommand extends CommandBase {
             m_armSubsystem.goToClosedLoopPosition(Constants.levelThreeTarget);
             m_switch = false;
         }
-        else if (m_timer.get() > 5. && m_timer.get() < 1.1)
+        else if (m_timer.get() > 0.5 && m_timer.get() < 1.1)
         {
             //dwell
             m_drivingSubsystem.drive(-.75, -.75, 1.0);
@@ -77,26 +79,29 @@ public class CubeNClimbAutoCommand extends CommandBase {
             m_gripperSubsystem.openGripper();
         }
         else if (m_timer.get() > 1.3 && m_timer.get() < 2.3){
-        m_drivingSubsystem.drive(.75, .75, 1.0);
+            m_drivingSubsystem.drive(.75, .75, 1.0);
             if (m_timer.get() > 1.5){
                 m_armSubsystem.goToClosedLoopPosition(Constants.levelZeroTarget);
                 m_gripperSubsystem.closeGripper();
             }
-        // }
-        // else if (!(super.isFinished())){
-        //     super.execute();
-        // }
-        // else if (super.isFinished());
-        // m_angle = m_drivingSubsystem.getAngle();
-        // if (m_onRamp)
-        //     {
-        //         // Controller for balancing on the charger
-        //         ExecuteRampControl();
-        //     }
-        //     else
-        //     {
-        //         // Approach the ramp
-        //         ExecuteFlatControl();
+        }
+        else if (m_timer.get() > 2.3 && m_timer.get() < 2.4){
+            m_drivingSubsystem.drive(0, 0, 1.0);
+        }
+        else if (!(super.isFinished())){
+            super.execute();
+        }
+        else if (super.isFinished());
+        m_angle = m_drivingSubsystem.getAngle();
+        if (m_onRamp)
+            {
+                // Controller for balancing on the charger
+                ExecuteRampControl();
+            }
+            else
+            {
+                // Approach the ramp
+                ExecuteFlatControl();
         }
     }
 
