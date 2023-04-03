@@ -37,8 +37,6 @@ public class CubeNClimbAutoCommand extends CommandBase {
     private final Timer m_timer = new Timer();  
     
     public CubeNClimbAutoCommand(DrivingSubsystem drivingSubsystem, FlapSubsystem flapSubsystem, ArmSubsystem armSubsystem, GripperSubsystem gripperSubsystem, FootSubsystem footSubsystem) {
-        // super(new PIDController(0.03, 0.0, 0.01), drivingSubsystem::getAngle,
-        // 180.0, output -> drivingSubsystem.drive(output, -output, 1.0), drivingSubsystem);
         m_drivingSubsystem = drivingSubsystem;
         m_flapSubsystem = flapSubsystem;
         m_armSubsystem = armSubsystem;
@@ -58,7 +56,6 @@ public class CubeNClimbAutoCommand extends CommandBase {
         System.out.println("Init gyro");
         m_drivingSubsystem.gyroscope.setYawAxis(IMUAxis.kZ);
         m_drivingSubsystem.gyroscope.reset();
-        // super.initialize();
         return;
     }
 
@@ -85,24 +82,24 @@ public class CubeNClimbAutoCommand extends CommandBase {
                 m_gripperSubsystem.closeGripper();
             }
         }
-        else if (m_timer.get() > 2.3 && m_timer.get() < 2.4){
-            m_drivingSubsystem.drive(0, 0, 1.0);
+        else if (m_timer.get() > 2.3 && m_timer.get() < 2.7){
+            m_drivingSubsystem.drive(0.75, -0.75, 1.0);
         }
-        else if (!(super.isFinished())){
-            super.execute();
+        else if (m_timer.get() > 2.7 && m_timer.get() < 2.8){
+            m_drivingSubsystem.drive(0.75, -0.75, 1.0);
         }
-        else if (super.isFinished());
-        m_angle = m_drivingSubsystem.getAngle();
-        if (m_onRamp)
-            {
+        else;
+            m_angle = m_drivingSubsystem.getAngle();
+            if (m_onRamp)
+                {
                 // Controller for balancing on the charger
                 ExecuteRampControl();
-            }
+                }
             else
-            {
+                {
                 // Approach the ramp
                 ExecuteFlatControl();
-        }
+                }
     }
 
     // Called once the command ends or is interrupted.
@@ -132,10 +129,10 @@ public class CubeNClimbAutoCommand extends CommandBase {
 
         if (motorsOff){
             if (m_timerStarted){
-                finished = (m_timer.get() > m_stopTime);
+                finished = (m_delay.get() > m_stopTime);
             }   
             else{
-                m_timer.start();
+                m_delay.get();
                 m_timerStarted = true;
             } 
         }
