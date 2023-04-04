@@ -12,9 +12,9 @@
 
 package frc.robot;
 
-import frc.ArmAutoLevelConstants;
-import frc.ArmLevelReplaceThisName;
-import frc.robot.Constants.ArmLevel;
+// import frc.ArmAutoLevelConstants;
+// import frc.ArmLevelReplaceThisName;
+// import frc.robot.Constants.ArmLevel;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -144,24 +144,24 @@ public class RobotContainer {
   */
   public Command getAutonomousCommand(String cubeLevelSelected, String movementSelected) {      
     // return new Level3AutoLeaveCommunityCommand(m_flapSubsystem, m_armSubsystem, m_gripperSubsystem, m_drivingSubsystem);
-    // return new BalanceCommand(m_drivingSubsystem, m_footSubsystem, m_gripperSubsystem,null, true);
+    return new CubeAndCubeAutoCmdGroup(m_gripperSubsystem, m_drivingSubsystem, m_armSubsystem, m_flapSubsystem);
     // The selected command will be run in autonomous
-    switch (cubeLevelSelected){
-      case Constants.kBalance:
-        return new 
+    // switch (cubeLevelSelected){
+    //   // case Constants.kBalance:
+    //   //   return new 
 
-      case Constants.kCrossLine:
-        return new LeaveCommunityCommand(m_gripperSubsystem, true, m_drivingSubsystem);
+    //   case Constants.kCrossLine:
+    //     return new LeaveCommunityCommand(m_gripperSubsystem, true, m_drivingSubsystem);
 
-      case Constants.kLevel3:
-        return new CubeAutoCmdGroup(m_armSubsystem, m_gripperSubsystem, m_drivingSubsystem, ArmAutoLevelConstants.LEVEL_1);
+    //   case Constants.kLevel3:
+    //     return new CubeAutoCmdGroup(m_armSubsystem, m_gripperSubsystem, m_drivingSubsystem, ArmAutoLevelConstants.LEVEL_1);
 
-      case Constants.kCubeCrossLine:
-        return new Level3AutoLeaveCommunityCommand( m_armSubsystem, m_gripperSubsystem, m_drivingSubsystem);
+    //   // case Constants.kCubeCrossLine:
+    //   //   return new Level3AutoLeaveCommunityCommand( m_armSubsystem, m_gripperSubsystem, m_drivingSubsystem);
 
-      default:
-        return null;
-    }
+    //   default:
+    //     return null;
+    // }
   }
   
   public void retractFoot(){
